@@ -35,9 +35,9 @@ def main():
     if n_cores is None:
         n_cores = len(os.sched_getaffinity(0))
     # Prepare the LLM
-    if model_type=="LlamaCpp":
+    if model_type == "LlamaCpp":
         llm = LlamaCpp(model_path=model_path, n_threads=n_cores, n_ctx=model_n_ctx, n_batch=model_n_batch, callbacks=callbacks, verbose=False)
-    elif model_type=="GPT4All":
+    elif model_type == "GPT4All":
         llm = GPT4All(model=model_path, n_threads=n_cores, n_ctx=model_n_ctx, backend='gptj', n_batch=model_n_batch, callbacks=callbacks, verbose=False)
     else:
         print(f"Model {model_type} not supported!")

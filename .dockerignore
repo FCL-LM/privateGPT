@@ -1,0 +1,7 @@
+.models
+.github
+.git
+*.env
+README.md
+venv
+source_documents
