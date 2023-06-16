@@ -8,11 +8,15 @@ from langchain.llms import GPT4All, LlamaCpp
 import os
 import argparse
 import time
+import sys
+import csv
 
 load_dotenv()
 
 embeddings_model_name = os.environ.get("EMBEDDINGS_MODEL_NAME")
 persist_directory = os.environ.get('PERSIST_DIRECTORY')
+performance_data_time_file = os.environ.get("PERFORMANCE_DATA_TIME_FILE")
+performance_data_sources_file = os.environ.get("PERFORMANCE_DATA_SOURCES_FILE")
 
 model_type = os.environ.get('MODEL_TYPE')
 model_path = os.environ.get('MODEL_PATH')
@@ -58,12 +62,21 @@ def main():
         print("\n\n> Question:")
         print(query)
         print(f"\n> Answer (took {round(end - start, 2)} s.):")
+        #Print time taken to answer to file for benchmarking
+        print(f"{round(end - start, 2)}")
         print(answer)
-
-        # Print the relevant sources used for the answer
-        for document in docs:
-            print("\n> " + document.metadata["source"] + ":")
-            print(document.page_content)
+        with open(performance_data_time_file, "a") as f:
+            f.write(f"{len(os.sched_getaffinity(0))},{model_type},{embeddings_model_name},{round(end - start, 2)}\n")
+        # Print the relevant sources used for the answer in a csv file
+        if not args.hide_source:
+            with open(performance_data_sources_file, "a") as f:
+                writer = csv.writer(f)
+                for document in docs:
+                    writer.writerow([document.metadata["source"]])
+                # print("\n> Sources:")
+        # for document in docs:
+        #     print("\n> " + document.metadata["source"] + ":")
+        #     print(document.page_content)
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='privateGPT: Ask questions to your documents without an internet connection, '
