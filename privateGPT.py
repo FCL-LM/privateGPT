@@ -11,6 +11,7 @@ import time
 
 load_dotenv()
 
+n_cores = os.environ.get("N_CORES")
 embeddings_model_name = os.environ.get("EMBEDDINGS_MODEL_NAME")
 persist_directory = os.environ.get('PERSIST_DIRECTORY')
 
@@ -30,6 +31,8 @@ def main():
     retriever = db.as_retriever(search_kwargs={"k": target_source_chunks})
     # activate/deactivate the streaming StdOut callback for LLMs
     callbacks = [] if args.mute_stream else [StreamingStdOutCallbackHandler()]
+    if n_cores is None:
+        n_cores = len(os.sched_getaffinity(0))
     # Prepare the LLM
     if model_type == "LlamaCpp":
         llm = LlamaCpp(model_path=model_path, n_ctx=model_n_ctx, n_batch=model_n_batch, callbacks=callbacks, verbose=False)
