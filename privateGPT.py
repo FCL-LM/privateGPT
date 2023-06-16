@@ -13,7 +13,7 @@ import csv
 
 load_dotenv()
 
-n_cores = os.environ.get("N_CORES")
+global n_cores
 embeddings_model_name = os.environ.get("EMBEDDINGS_MODEL_NAME")
 persist_directory = os.environ.get('PERSIST_DIRECTORY')
 performance_data_time_file = os.environ.get("PERFORMANCE_DATA_TIME_FILE")
@@ -35,6 +35,8 @@ def main():
     retriever = db.as_retriever(search_kwargs={"k": target_source_chunks})
     # activate/deactivate the streaming StdOut callback for LLMs
     callbacks = [] if args.mute_stream else [StreamingStdOutCallbackHandler()]
+    # Get the number of cores
+    n_cores = os.environ.get('N_CORES')
     if n_cores is None:
         n_cores = len(os.sched_getaffinity(0))
     # Prepare the LLM
