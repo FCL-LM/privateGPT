@@ -11,7 +11,7 @@ import time
 
 load_dotenv()
 
-n_cores = os.environ.get("N_CORES")
+global n_cores
 embeddings_model_name = os.environ.get("EMBEDDINGS_MODEL_NAME")
 persist_directory = os.environ.get('PERSIST_DIRECTORY')
 
@@ -31,17 +31,17 @@ def main():
     retriever = db.as_retriever(search_kwargs={"k": target_source_chunks})
     # activate/deactivate the streaming StdOut callback for LLMs
     callbacks = [] if args.mute_stream else [StreamingStdOutCallbackHandler()]
+    n_cores = n_cores = os.environ.get("N_CORES")
     if n_cores is None:
         n_cores = len(os.sched_getaffinity(0))
     # Prepare the LLM
-    match model_type:
-        case "LlamaCpp":
-            llm = LlamaCpp(model_path=model_path, n_threads=n_cores, n_ctx=model_n_ctx, n_batch=model_n_batch, callbacks=callbacks, verbose=False)
-        case "GPT4All":
-            llm = GPT4All(model=model_path, n_threads=n_cores, n_ctx=model_n_ctx, backend='gptj', n_batch=model_n_batch, callbacks=callbacks, verbose=False)
-        case _default:
-            print(f"Model {model_type} not supported!")
-            exit;
+    if model_type=="LlamaCpp":
+        llm = LlamaCpp(model_path=model_path, n_threads=n_cores, n_ctx=model_n_ctx, n_batch=model_n_batch, callbacks=callbacks, verbose=False)
+    elif model_type=="GPT4All":
+        llm = GPT4All(model=model_path, n_threads=n_cores, n_ctx=model_n_ctx, backend='gptj', n_batch=model_n_batch, callbacks=callbacks, verbose=False)
+    else:
+        print(f"Model {model_type} not supported!")
+        exit;
     qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, return_source_documents= not args.hide_source)
     # Interactive questions and answers
     while True:
