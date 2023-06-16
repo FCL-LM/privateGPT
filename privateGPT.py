@@ -69,7 +69,7 @@ def main():
         print(f"{round(end - start, 2)}")
         print(answer)
         with open(performance_data_time_file, "a") as f:
-            f.write(f"{len(os.sched_getaffinity(0))},{model_type + model_path},{embeddings_model_name},{round(end - start, 2)}\n")
+            f.write(f"{n_cores},{model_type + model_path},{embeddings_model_name},{round(end - start, 2)}\n")
         # Print the relevant sources used for the answer in a csv file
         if not args.hide_source:
             with open(performance_data_sources_file, "a") as f:
