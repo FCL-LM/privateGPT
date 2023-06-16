@@ -137,5 +137,17 @@ When running a Mac with Intel hardware (not M1), you may run into _clang: error:
 
 If so set your archflags during pip install. eg: _ARCHFLAGS="-arch x86_64" pip3 install -r requirements.txt_
 
+## Running with Docker
+First of all, pull the docker image with
+```bash
+$ docker pull ghcr.io/fcl-lm/privategpt:main
+```
+
+Then run
+
+```bash
+$ docker run -it -v <models-dir>:/privategpt/models/ -v <source_documents>:/privategpt/source_documents/ -v <.env>:/privategpt/.env ghcr.io/fcl-lm/privategpt:main
+```
+
 # Disclaimer
 This is a test project to validate the feasibility of a fully private solution for question answering using LLMs and Vector embeddings. It is not production ready, and it is not meant to be used in production. The models selection is not optimized for performance, but for privacy; but it is possible to use different models and vectorstores to improve performance.
