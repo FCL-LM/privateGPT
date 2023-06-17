@@ -1,3 +1,3 @@
 #!/bin/bash
 /privategpt/ingest.py
-/privategpt/flashAPP.py
+/privategpt/flaskAPP.py
