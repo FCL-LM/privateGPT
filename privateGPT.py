@@ -35,7 +35,7 @@ retriever = db.as_retriever(search_kwargs={"k": target_source_chunks})
 
 # activate/deactivate the streaming StdOut callback for LLMs
 callbacks = [StreamingStdOutCallbackHandler()]
-n_cores = n_cores = os.environ.get("N_CORES")
+n_cores = os.environ.get("N_CORES")
 if n_cores is None:
     n_cores = len(os.sched_getaffinity(0))
 
