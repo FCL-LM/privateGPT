@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from dotenv import load_dotenv
-from langchain.chains import RetrievalQA
+from langchain.chains import RetrievalQA, ConversationalRetrievalChain
+from langchain.chains.conversation.memory import ConversationBufferMemory
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.vectorstores import Chroma
@@ -47,6 +48,9 @@ def main():
     else:
         print(f"Model {model_type} not supported!")
         exit;
+    # Preparing the memory-byffered chain
+    # memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True, output_key='answer')                     # buffer containing the entire conversation history
+    # retrievalChain = ConversationalRetrievalChain.from_llm(llm=llm, retriever=retriever, return_source_documents= not args.hide_source, memory=memory)
     qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, return_source_documents= not args.hide_source)
     # Interactive questions and answers
     while True:
@@ -59,7 +63,9 @@ def main():
         # Get the answer from the chain
         start = time.time()
         res = qa(query)
+        # res = retrievalChain(query)
         answer, docs = res['result'], [] if args.hide_source else res['source_documents']
+        # answer, docs = res['answer'], [] if args.hide_source else res['source_documents']
         end = time.time()
 
         # Print the result
@@ -77,10 +83,10 @@ def main():
                 writer = csv.writer(f)
                 for document in docs:
                     writer.writerow([document.metadata["source"]])
-                # print("\n> Sources:")
-        # for document in docs:
-        #     print("\n> " + document.metadata["source"] + ":")
-        #     print(document.page_content)
+                print("\n> Sources:")
+        for document in docs:
+            print("\n> " + document.metadata["source"] + ":")
+            print(document.page_content)
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='privateGPT: Ask questions to your documents without an internet connection, '
