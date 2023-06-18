@@ -5,7 +5,7 @@ from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain import ElasticVectorSearch
 from langchain.llms import GPT4All, LlamaCpp
-import os
+import os, sys
 
 class GPTModel:
     __embeddings: HuggingFaceEmbeddings
