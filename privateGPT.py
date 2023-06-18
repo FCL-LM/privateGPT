@@ -3,16 +3,14 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.chains.conversation.memory import ConversationBufferMemory
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-from langchain.vectorstores import Chroma
+from langchain import ElasticVectorSearch
 from langchain.llms import GPT4All, LlamaCpp
 import os
 
-from constants import CHROMA_SETTINGS
-
 class GPTModel:
     __embeddings: HuggingFaceEmbeddings
-    __db: Chroma
-    __retriever: Chroma.as_retriever
+    __db: ElasticVectorSearch
+    __retriever: ElasticVectorSearch.as_retriever
 
     __llm: None
 
@@ -100,15 +98,15 @@ class GPTModel:
         return self.__db
 
     @database.setter
-    def database(self, db_chroma: Chroma):
-        self.__db = db_chroma
+    def database(self, new_db: ElasticVectorSearch):
+        self.__db = new_db
 
     @property
     def retriever(self):
         return self.__retriever
     
     @retriever.setter
-    def retriever(self, retriever: Chroma.as_retriever):
+    def retriever(self, retriever: ElasticVectorSearch.as_retriever):
         self.__retriever = retriever
     
     @property
@@ -159,7 +157,9 @@ class GPTModel:
     # Prepare embeddings, database and retriever
     def load_embeddings_retriever(self):
         self.__embeddings = HuggingFaceEmbeddings(model_name = self.embeddings_model_name)
-        self.__db = Chroma(persist_directory=self.persist_directory, embedding_function=self.embeddings, client_settings=CHROMA_SETTINGS)
+        self.__db = ElasticVectorSearch(elasticsearch_url='http://elastic:adminadmin@127.0.0.1:9200',\
+                                        index_name="test_index",\
+                                        embedding=self.__embeddings)
         self.__retriever = self.database.as_retriever(search_kwargs={"k": self.target_source_chunks})
     
 
