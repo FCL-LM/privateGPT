@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import glob
+import s3_override 
 from typing import List
 from dotenv import load_dotenv
 from multiprocessing import Pool
@@ -18,6 +19,7 @@ from langchain.document_loaders import (
     UnstructuredODTLoader,
     UnstructuredPowerPointLoader,
     UnstructuredWordDocumentLoader,
+    S3DirectoryLoader,
 )
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -26,17 +28,15 @@ from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.docstore.document import Document
 from constants import CHROMA_SETTINGS
 
-
 load_dotenv()
-
 
 # Load environment variables
 persist_directory = os.environ.get('PERSIST_DIRECTORY')
-source_directory = os.environ.get('SOURCE_DIRECTORY', 'source_documents')
 embeddings_model_name = os.environ.get('EMBEDDINGS_MODEL_NAME')
 chunk_size = 500
 chunk_overlap = 50
 
+s3_source_directory = s3_override.S3DirectoryLoader("sources")
 
 # Custom document loaders
 class MyElmLoader(UnstructuredEmailLoader):
@@ -114,12 +114,12 @@ def process_documents(ignored_files: List[str] = []) -> List[Document]:
     """
     Load documents and split in chunks
     """
-    print(f"Loading documents from {source_directory}")
-    documents = load_documents(source_directory, ignored_files)
+    print(f"Loading documents from bucket s3://{s3_source_directory.bucket}")
+    documents = s3_source_directory.load()
     if not documents:
         print("No new documents to load")
         exit(0)
-    print(f"Loaded {len(documents)} new documents from {source_directory}")
+    print(f"Loaded {len(documents)} new documents from bucket s3://{s3_source_directory.bucket}")
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     texts = text_splitter.split_documents(documents)
     print(f"Split into {len(texts)} chunks of text (max. {chunk_size} tokens each)")
