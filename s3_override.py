@@ -8,9 +8,9 @@ from langchain.docstore.document import Document
 from langchain.document_loaders.base import BaseLoader
 from langchain.document_loaders.unstructured import UnstructuredFileLoader
 
-access_key = os.environ.get('ACCESS_KEY', 'adminadmin')
-secret_key = os.environ.get('SECRET_KEY', 'adminadmin')
-endpoint_url = os.environ.get('ENDPOINT_URL', 'http://localhost:8333')
+access_key = os.environ.get('S3_ACCESS_KEY', 'adminadmin')
+secret_key = os.environ.get('S3_SECRET_KEY', 'adminadmin')
+endpoint_url = os.environ.get('S3_ENDPOINT', 'http://localhost:8333')
 
 class S3FileLoader(BaseLoader):
     """Loading logic for loading documents from s3."""
