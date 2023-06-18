@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import time
 import logging
 from flask import Flask, request, jsonify

@@ -1,4 +1,6 @@
-.models
+models
+db
+__pycache__
 .github
 .git
 *.env
