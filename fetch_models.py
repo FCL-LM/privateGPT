@@ -20,6 +20,11 @@ s3 = boto3.client(use_ssl = True,\
 
 pathfile = os.path.join("models/", model_name)
 
+#control if the file exists already in local
+if os.path.exists(pathfile):
+    sys.exit("model already fetched. If the model was updated remove the old model and restart the app")
+
+
 try:
     s3.download_file('models', model_name, pathfile)
 except:
