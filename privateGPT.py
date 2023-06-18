@@ -181,8 +181,7 @@ class GPTModel:
                                             callbacks = self.callbacks,\
                                             verbose = False)
         else:
-            print(f"Model {self.model_type} not supported!")
-            exit
+            sys.exit(f"Model {self.model_type} not supported!")
 
 
     # Preparing the memory-buffered chain

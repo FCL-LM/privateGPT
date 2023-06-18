@@ -93,7 +93,7 @@ def load_documents(ignored_files: List[str]) -> List[Document]:
     documents = s3_source_directory.load()
     if not documents:
         print("No new documents to load")
-        exit(0)
+        sys.exit(0)
     
     filtered_files = [f for f in documents if os.path.basename(f.dict()['metadata']['source']) not in ignored_files]
     return filtered_files
