@@ -143,11 +143,12 @@ services:
       image: ghcr.io/fcl-lm/privategpt:main
       ports:
          - 5000:5000
-      enviornment:
+      environment:
          S3_ENDPOINT: "http://localhost:8333"
          S3_ACCESS_KEY: "adminadmin"
          S3_SECRET_KEY: "adminadmin"
-         PERSIST_DIRECTORY: db
+         ELASTIC_ENDPOINT: "http://elastic:adminadmin@127.0.0.1:9200"
+         ELASTIC_INDEX: test_index
          MODEL_TYPE: GPT4All
          MODEL_NAME: ggml-gpt4all-j-v1.3-groovy.bin
          EMBEDDINGS_MODEL_NAME: all-MiniLM-L6-v2
@@ -156,13 +157,11 @@ services:
          TARGET_SOURCE_CHUNKS: 4
       volumes:
          - privategpt-tmp:/tmp
-         - privategpt-ntlk:/root/ntlk_data/
-         - privategpt-db:/privategpt/db
+         - privategpt-models:/privategpt/models
 
 volumes:
    privategpt-tmp:
-   privategpt-ntlk:
-   privategpt-db:
+   privategpt-models:
 ```
 
 # Disclaimer
