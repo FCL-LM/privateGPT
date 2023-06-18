@@ -134,16 +134,35 @@ When running a Mac with Intel hardware (not M1), you may run into _clang: error:
 
 If so set your archflags during pip install. eg: _ARCHFLAGS="-arch x86_64" pip3 install -r requirements.txt_
 
-## Running with Docker
-First of all, pull the docker image with
-```bash
-$ docker pull ghcr.io/fcl-lm/privategpt:main
-```
+## Running with docker-compose
 
-Then run
+```yaml
+version: "3"
+services:
+   privategpt:
+      image: ghcr.io/fcl-lm/privategpt:main
+      ports:
+         - 5000:5000
+      enviornment:
+         S3_ENDPOINT: "http://localhost:8333"
+         S3_ACCESS_KEY: "adminadmin"
+         S3_SECRET_KEY: "adminadmin"
+         PERSIST_DIRECTORY: db
+         MODEL_TYPE: GPT4All
+         MODEL_NAME: ggml-gpt4all-j-v1.3-groovy.bin
+         EMBEDDINGS_MODEL_NAME: all-MiniLM-L6-v2
+         MODEL_N_CTX: 1000
+         MODEL_N_BATCH: 8
+         TARGET_SOURCE_CHUNKS: 4
+      volumes:
+         - privategpt-tmp:/tmp
+         - privategpt-ntlk:/root/ntlk_data/
+         - privategpt-db:/privategpt/db
 
-```bash
-$ docker run -p 127.0.0.1:5000:5000 -it -v <models-dir>:/privategpt/models/ -v <source_documents>:/privategpt/source_documents/ -v <.env>:/privategpt/.env ghcr.io/fcl-lm/privategpt:main
+volumes:
+   privategpt-tmp:
+   privategpt-ntlk:
+   privategpt-db:
 ```
 
 # Disclaimer
