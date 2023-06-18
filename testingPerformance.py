@@ -58,39 +58,42 @@ def main():
         questions = f.readlines()
     # Remove the \n from the end of each line
     questions = [q[:-1] for q in questions]
-    # Ask the questions and print the answers
-    for query in questions:
-        print("Query from file", query)
-        if query.strip() == "":
-            continue
+    # Ask the questions two times and print the answers
+    i = 0
+    while i < 2:
+        for query in questions:
+            print("Query from file", query)
+            if query.strip() == "":
+                continue
 
-        # Get the answer from the chain
-        start = time.time()
-        res = qa(query)
-        # res = retrievalChain(query)
-        answer, docs = res['result'], [] if args.hide_source else res['source_documents']
-        # answer, docs = res['answer'], [] if args.hide_source else res['source_documents']
-        end = time.time()
+            # Get the answer from the chain
+            start = time.time()
+            res = qa(query)
+            # res = retrievalChain(query)
+            answer, docs = res['result'], [] if args.hide_source else res['source_documents']
+            # answer, docs = res['answer'], [] if args.hide_source else res['source_documents']
+            end = time.time()
 
-        # Print the result
-        print("\n\n> Question:")
-        print(query)
-        print(f"\n> Answer (took {round(end - start, 2)} s.):")
-        #Print time taken to answer to file for benchmarking
-        print(f"{round(end - start, 2)}")
-        print(answer)
-        with open(performance_data_time_file, "a") as f:
-            f.write(f"{n_cores},{model_type + model_path},{embeddings_model_name},{round(end - start, 2)}\n")
-        # Print the relevant sources used for the answer in a csv file
-        if not args.hide_source:
-            with open(performance_data_sources_file, "a") as f:
-                writer = csv.writer(f)
-                for document in docs:
-                    writer.writerow([document.metadata["source"]])
-                # print("\n> Sources:")
-        # for document in docs:
-        #     print("\n> " + document.metadata["source"] + ":")
-        #     print(document.page_content)
+            # Print the result
+            print("\n\n> Question:")
+            print(query)
+            print(f"\n> Answer (took {round(end - start, 2)} s.):")
+            #Print time taken to answer to file for benchmarking
+            print(f"{round(end - start, 2)}")
+            print(answer)
+            with open(performance_data_time_file, "a") as f:
+                f.write(f"{n_cores},{model_type + model_path},{embeddings_model_name},{round(end - start, 2)}\n")
+            # Print the relevant sources used for the answer in a csv file
+            if not args.hide_source:
+                with open(performance_data_sources_file, "a") as f:
+                    writer = csv.writer(f)
+                    for document in docs:
+                        writer.writerow([document.metadata["source"]])
+                    # print("\n> Sources:")
+            # for document in docs:
+            #     print("\n> " + document.metadata["source"] + ":")
+            #     print(document.page_content)
+        i += 1
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='privateGPT: Ask questions to your documents without an internet connection, '
