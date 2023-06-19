@@ -31,8 +31,10 @@ class GPTModel:
         model_name = os.environ.get('MODEL_NAME')
         self.__model_path = os.path.join("models/", model_name)
         self.__model_n_ctx = os.environ.get('MODEL_N_CTX')
-        self.__model_n_batch = int(os.environ.get('MODEL_N_BATCH',8))
-        self.__target_source_chunks = int(os.environ.get('TARGET_SOURCE_CHUNKS',4))
+        self.__model_n_batch = int(os.environ.get('MODEL_N_BATCH', 8))
+        self.__target_source_chunks = int(os.environ.get('TARGET_SOURCE_CHUNKS', 4))
+        self.__elastic_db_endpoint = os.environ.get('ELASTIC_ENDPOINT')
+        self.__index_name = os.environ.get('ELASTIC_INDEX')
 
         self.__n_cores = os.environ.get("N_CORES")
         if self.__n_cores is None:
@@ -78,6 +80,14 @@ class GPTModel:
     @property
     def n_cores(self):
         return self.__n_cores
+    
+    @property
+    def elastic_db_endpoint(self):
+        return self.__elastic_db_endpoint
+    
+    @property
+    def index_name(self):
+        return self.__index_name
     
     
     # llm internal data-structures 
@@ -157,9 +167,9 @@ class GPTModel:
     # Prepare embeddings, database and retriever
     def load_embeddings_retriever(self):
         self.__embeddings = HuggingFaceEmbeddings(model_name = self.embeddings_model_name)
-        self.__db = ElasticVectorSearch(elasticsearch_url='http://elastic:adminadmin@127.0.0.1:9200',\
-                                        index_name="test_index",\
-                                        embedding=self.__embeddings)
+        self.__db = ElasticVectorSearch(elasticsearch_url = self.elastic_db_endpoint,\
+                                        index_name = self.index_name,\
+                                        embedding = self.__embeddings)
         self.__retriever = self.database.as_retriever(search_kwargs={"k": self.target_source_chunks})
     
 
