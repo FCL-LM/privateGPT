@@ -1,6 +1,7 @@
 langchain==0.0.197
 gpt4all==0.3.4
 chromadb==0.3.23
+elasticsearch==8.8.0
 llama-cpp-python==0.1.50
 urllib3==1.26.16
 PyMuPDF==1.22.3
