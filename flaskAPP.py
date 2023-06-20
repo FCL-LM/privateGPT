@@ -27,26 +27,8 @@ class FlaskGPT:
 
     def query(self):
         api_query = request.get_json()
-        # api_message = api_query['messages'][0]['content']['parts'][0]
-        print(api_query)
-
         answer = self.gpt_model.query_model(api_query['message'])
-
         response = jsonify(answer)
-        # api_query = request.get_json()
-        # print(api_query)
-        # api_message = api_query['messages'][0]['content']['parts'][0]
-
-        # # Get the answer from the chain
-        # start = time.time()
-        # answer['data']['text'] = self.gpt_model.query_model(api_message)
-        # answer['type'] = 'success'
-        # end = time.time()
-
-        # # Print the result
-        # print("\n\n> Question:")
-        # print(api_message)
-        # print(f"\n> Answer (took {round(end - start, 2)} s.):")
         
         return response
     
