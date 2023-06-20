@@ -21,7 +21,8 @@ pathfile = os.path.join("models", model_name)
 
 # Control if the file exists already in local
 if os.path.exists(pathfile):
-    sys.exit("Model already fetched. If the model was updated remove the old model and restart the app")
+    print(f"Model {model_name} already exists in local.")
+    sys.exit(0)
 
 try:
     model_size = s3.head_object(Bucket='models', Key=model_name)['ContentLength']
