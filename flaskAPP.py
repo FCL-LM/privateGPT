@@ -33,7 +33,7 @@ class FlaskGPT:
         return response
     
     def run(self):
-        self.__app.run()
+        self.__app.run(port=5000, host='0.0.0.0')
 
 flask = FlaskGPT(GPTModel())
 flask.run()
