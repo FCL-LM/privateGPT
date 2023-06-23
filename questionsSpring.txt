@@ -1,0 +1,20 @@
+What is Spring Boot, and how does it differ from traditional Spring framework?
+What are the key features and benefits of using Spring Boot?
+How does Spring Boot simplify the configuration process?
+Explain the concept of "auto-configuration" in Spring Boot.
+What is the purpose of the Spring Boot Starter POMs?
+How can you create a basic RESTful web service using Spring Boot?
+What is the significance of the Spring Boot Actuator module?
+How can you customize the default behavior of Spring Boot applications?
+How does Spring Boot handle dependency management and versioning?
+What are the different ways to deploy a Spring Boot application?
+Explain the role of embedded servers in Spring Boot and name a few examples.
+How can you externalize configuration in a Spring Boot application?
+What is the purpose of the Spring Boot DevTools module?
+What is Spring Boot's approach to testing and how can you write unit tests for your application?
+How can you integrate Spring Boot with different databases, such as MySQL or MongoDB?
+Explain the concept of "profiles" in Spring Boot and how they can be used.
+What is the purpose of Spring Boot Actuator endpoints, and how can you use them?
+How can you implement security in a Spring Boot application?
+What are the recommended ways to monitor and manage Spring Boot applications in production?
+What is the ideal way of deploying a spring Boot application to the cloud?
