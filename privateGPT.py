@@ -44,7 +44,7 @@ def main():
     n_batch = 512  # how many tokens are processed in parallel.Should be between 1 and n_ctx, consider the amount of VRAM in your GPU.
     # Prepare the LLM
     if model_type == "LlamaCpp":
-        llm = LlamaCpp(model_path="models/", n_gpu_layers=n_gpu_layers, n_threads=n_cores, n_ctx=2048, n_batch=model_n_batch, callbacks=callbacks, verbose=False)
+        llm = LlamaCpp(model_path=model_path, n_gpu_layers=n_gpu_layers, n_threads=n_cores, n_ctx=2048, n_batch=model_n_batch, callbacks=callbacks, verbose=False)
     elif model_type == "GPT4All":
         llm = GPT4All(model=model_path, n_threads=n_cores, n_ctx=model_n_ctx, backend='gptj', n_batch=model_n_batch, callbacks=callbacks, verbose=False)
     else:
