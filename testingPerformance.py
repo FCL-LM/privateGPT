@@ -40,9 +40,12 @@ def main():
     n_cores = os.environ.get('N_CORES')
     if n_cores is None:
         n_cores = len(os.sched_getaffinity(0))
+    # GPU parameters
+    n_gpu_layers = 40  # determines how many layers of the model are offloaded to your GPU.Change this value based on your model and your GPU VRAM pool.
+    n_batch = 512  # how many tokens are processed in parallel.Should be between 1 and n_ctx, consider the amount of VRAM in your GPU.
     # Prepare the LLM
     if model_type == "LlamaCpp":
-        llm = LlamaCpp(model_path=model_path, n_threads=n_cores, n_ctx=model_n_ctx, n_batch=model_n_batch, callbacks=callbacks, verbose=False)
+        llm = LlamaCpp(model_path=model_path, n_gpu_layers=n_gpu_layers, n_threads=n_cores, n_ctx=model_n_ctx, n_batch=model_n_batch, callbacks=callbacks, verbose=False)
     elif model_type == "GPT4All":
         llm = GPT4All(model=model_path, n_threads=n_cores, n_ctx=model_n_ctx, backend='gptj', n_batch=model_n_batch, callbacks=callbacks, verbose=False)
     else:
@@ -54,7 +57,7 @@ def main():
     qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, return_source_documents= not args.hide_source)
     # Questions taken from a file as single lines
     questions = []
-    with open("questions.txt", "r") as f:
+    with open("questionsSpring.txt", "r") as f:
         questions = f.readlines()
     # Remove the \n from the end of each line
     questions = [q[:-1] for q in questions]
@@ -82,7 +85,7 @@ def main():
             print(f"{round(end - start, 2)}")
             print(answer)
             with open(performance_data_time_file, "a") as f:
-                f.write(f"{n_cores},{model_type + model_path},{embeddings_model_name},{round(end - start, 2)}\n")
+                f.write(f"{n_cores},{model_type + model_path},{embeddings_model_name},{round(end - start, 2)},GPU\n")
             # Print the relevant sources used for the answer in a csv file
             if not args.hide_source:
                 with open(performance_data_sources_file, "a") as f:

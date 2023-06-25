@@ -40,9 +40,10 @@ def main():
     n_cores = os.environ.get('N_CORES')
     if n_cores is None:
         n_cores = len(os.sched_getaffinity(0))
-    n_gpu_layers = 10  # determines how many layers of the model are offloaded to your GPU.Change this value based on your model and your GPU VRAM pool.
+    n_gpu_layers = 35  # determines how many layers of the model are offloaded to your GPU.Change this value based on your model and your GPU VRAM pool.
     n_batch = 512  # how many tokens are processed in parallel.Should be between 1 and n_ctx, consider the amount of VRAM in your GPU.
     # Prepare the LLM
+    # model_path = "models/ggml-wizardLM-7B.q4_2.bin"
     if model_type == "LlamaCpp":
         llm = LlamaCpp(model_path=model_path, n_gpu_layers=n_gpu_layers, n_threads=n_cores, n_ctx=2048, n_batch=model_n_batch, callbacks=callbacks, verbose=False)
     elif model_type == "GPT4All":
