@@ -1,6 +1,9 @@
 FROM python:3.10
 WORKDIR /privategpt
 
+RUN apt-get update && \
+    apt-get -y install poppler-utils
+
 COPY requirements.txt .
 RUN pip install -r requirements.txt 
 
